@@ -1,0 +1,3157 @@
+// Project Duality: Cardflow
+// Frameless design — no containing panels on the player area.
+
+$color-bg-void:         #050208;
+$color-bg-dark:         #130C24;
+$color-bg-surface:      #22153D;
+$color-bg-raised:       #2A1A4A;
+$color-purple:          #6B21A8;
+$color-purple-bright:   #9333EA;
+$color-gold:            #D97706;
+$color-gold-mid:        #F59E0B;
+$color-gold-bright:     #FCD34D;
+$color-text-primary:    #EDE0CC;
+$color-text-secondary:  #C4A96B;
+$color-text-muted:      #8B7D6E;
+$color-text-dim:        #5A4E44;
+$color-parchment:       #C4A96B;
+$color-parchment-pale:  #E8D5A8;
+$color-danger:          #EF4444;
+
+$font-display: 'Cinzel', 'Palatino Linotype', serif;
+$font-ui:      'Segoe UI', system-ui, sans-serif;
+
+// ─── Player area ──────────────────────────────────────────────────────────────
+
+#duality-player-area {
+  position: fixed;
+  bottom: -90px;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  transition: bottom 0.28s ease;
+
+  &.is-revealed {
+    bottom: 20px;
+  }
+}
+
+#duality-player-area::before {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.45));
+  pointer-events: none;
+  z-index: -1;
+}
+
+// ─── GM Dashboard ─────────────────────────────────────────────────────────────
+
+#duality-gm-dashboard {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.duality-gm-gallery {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.duality-gm-portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  pointer-events: all;
+
+  &-frame {
+    position: relative;
+    width: 82px;
+    height: 82px;
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-align: center;
+    max-width: 90px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    background: rgba($color-purple, 0.55);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+}
+
+.duality-gm-portrait-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 1.5rem;
+
+  &--spotlight {
+    background: rgba(0, 0, 0, 0.40);
+    color: $color-gold-bright;
+    text-shadow: 0 0 12px rgba($color-gold, 0.80);
+  }
+
+  &--requesting {
+    background: rgba(0, 0, 0, 0.40);
+    color: rgba($color-gold-mid, 0.75);
+    text-shadow: 0 0 8px rgba($color-gold, 0.45);
+  }
+
+  &--targeted {
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(220, 80, 80, 0.95);
+    text-shadow: 0 0 10px rgba(220, 60, 60, 0.70);
+  }
+}
+
+.duality-gm-context-menu {
+  position: fixed;
+  z-index: 200;
+  min-width: 160px;
+  background: rgba($color-bg-raised, 0.97);
+  border: 1px solid rgba($color-gold, 0.35);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    color: $color-text-secondary;
+    font-family: $font-display;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-align: left;
+    cursor: pointer;
+    pointer-events: all;
+
+    i { width: 14px; text-align: center; }
+
+    &:hover {
+      background: rgba($color-gold, 0.12);
+      color: $color-gold-bright;
+    }
+  }
+}
+
+// ── GM action column — pinned to right of portrait gallery ────────────────────
+
+.duality-gm-actions {
+  position: absolute;
+  left: 100%;
+  margin-left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: all;
+}
+
+.duality-gm-untarget-btn {
+  position: relative;
+  border-color: rgba(#9999aa, 0.35);
+
+  i { color: rgba(#888888, 0.55); }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 68%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background: rgba(#cc3333, 0.55);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  &:hover {
+    border-color: rgba(220, 60, 60, 0.65);
+    box-shadow: 0 0 10px rgba(220, 60, 60, 0.40), 0 0 3px rgba(220, 60, 60, 0.30) inset;
+    i { color: rgba(220, 100, 100, 0.90); }
+    &::after { background: rgba(#cc3333, 0.80); }
+  }
+}
+
+// ─── Portrait panel — truly frameless flex column ─────────────────────────────
+
+.duality-portrait-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: all;
+}
+
+// ── Hope track — label centred above pip row ──────────────────────────────────
+
+.duality-hope-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.duality-hope-pips {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.duality-hope-label {
+  font-family: $font-display;
+  font-size: 1.10rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: $color-gold-bright;
+  text-shadow:
+    0 0 14px rgba($color-gold, 0.80),
+    0 0 3px rgba(0, 0, 0, 1.0),
+    0 0 6px rgba(0, 0, 0, 1.0),
+    0 3px 14px rgba(0, 0, 0, 1.0),
+    0 0 24px rgba(0, 0, 0, 0.95);
+  text-align: center;
+  user-select: none;
+}
+
+// Empty = circle outline. Filled = square diamond via clip-path polygon.
+// drop-shadow via filter (not box-shadow) so it follows the clip-path shape.
+.duality-hope-pip {
+  display: block;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  border: 2px solid rgba($color-gold, 0.60);
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 0;
+  line-height: 0;
+  filter:
+    drop-shadow(0 0 4px rgba(0, 0, 0, 1.0))
+    drop-shadow(0 2px 8px rgba(0, 0, 0, 1.0))
+    drop-shadow(0 0 12px rgba(0, 0, 0, 0.95));
+  transition: border-color 120ms ease, filter 200ms ease;
+
+  &.filled {
+    background: radial-gradient(circle at 35% 35%, $color-gold-bright, $color-gold);
+    border: none;
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    filter:
+      drop-shadow(0 0 7px rgba($color-gold, 0.95))
+      drop-shadow(0 0 3px rgba($color-gold-bright, 0.70))
+      drop-shadow(0 0 4px rgba(0, 0, 0, 1.0))
+      drop-shadow(0 2px 10px rgba(0, 0, 0, 1.0));
+  }
+
+  &:not(.filled):hover {
+    border-color: rgba($color-gold, 0.95);
+    filter:
+      drop-shadow(0 0 5px rgba($color-gold, 0.50))
+      drop-shadow(0 1px 4px rgba(0, 0, 0, 0.95));
+  }
+}
+
+// ── Middle row: [HP bar] [portrait] [Stress bar] ──────────────────────────────
+
+.duality-middle-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+// ── Stat bars — label and value on one line, overlaid on the fill ─────────────
+// flex-direction: row puts "HP 8/8" / "STRESS 0/10" inline, matching Alchemy.
+
+.duality-stat-box {
+  display: block;
+  position: relative;
+  z-index: 1;
+
+  &__bar {
+    position: relative;
+    z-index: 0;
+    width: 130px;
+    height: 46px;
+    background: rgba($color-bg-raised, 0.62);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  &__fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transition: width 400ms ease;
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  &__bar--interactive {
+    cursor: pointer;
+    user-select: none;
+    &:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba($color-gold, 0.28); }
+  }
+
+  &__input {
+    position: relative;
+    z-index: 2;
+    width: 72px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: $font-display;
+    font-size: 1.10rem;
+    font-weight: 700;
+    color: $color-parchment-pale;
+    text-align: center;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.90);
+    // hide browser number spinners
+    appearance: textfield;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button { display: none; }
+  }
+
+  // Label comes first in the DOM so it reads "HP 8/8" / "STRESS 0/10"
+  &__label {
+    position: relative;
+    z-index: 1;
+    font-family: $font-display;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba($color-parchment-pale, 0.65);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.90);
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  &__value {
+    position: relative;
+    z-index: 1;
+    font-family: $font-display;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: $color-parchment-pale;
+    line-height: 1;
+    user-select: none;
+    white-space: nowrap;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.90);
+  }
+
+  &--hp {
+    .duality-stat-box__fill {
+      background: linear-gradient(90deg, rgba($color-purple, 0.95), rgba($color-purple-bright, 0.90));
+    }
+    &.low      .duality-stat-box__fill  { background: linear-gradient(90deg, $color-gold, $color-gold-mid); }
+    &.critical .duality-stat-box__fill  { background: $color-danger; }
+    &.low      .duality-stat-box__value { color: $color-gold-bright; }
+    &.critical .duality-stat-box__value { color: #fff; }
+  }
+
+  &--stress {
+    .duality-stat-box__fill {
+      background: linear-gradient(90deg, rgba($color-gold, 0.80), rgba($color-gold-mid, 1.0));
+    }
+    &.high .duality-stat-box__fill  { background: $color-danger; }
+    &.high .duality-stat-box__value { color: #fff; }
+  }
+}
+
+// ── Portrait wrapper — hover zone, contains floating panels ──────────────────
+
+.duality-portrait-wrap {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+// ── Portrait button — gold ring is the sole visual anchor ─────────────────────
+
+.duality-portrait-btn {
+  display: block;
+  width: 82px;
+  height: 82px;
+  padding: 2px;
+  border: 2.5px solid rgba($color-gold, 0.65);
+  background: rgba($color-bg-dark, 0.45);
+  cursor: pointer;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 18px rgba($color-gold, 0.25),
+    0 0 40px rgba($color-purple, 0.18),
+    0 6px 24px rgba(0, 0, 0, 0.75);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 180ms ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  &:hover {
+    border-color: rgba($color-gold, 0.95);
+    box-shadow:
+      0 0 28px rgba($color-gold, 0.55),
+      0 0 50px rgba($color-purple, 0.25),
+      0 6px 28px rgba(0, 0, 0, 0.82);
+    transform: scale(1.05);
+  }
+
+  &.is-spotlighted {
+    border-color: rgba(255, 255, 255, 0.88);
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.25),
+      0 0 18px rgba(255, 255, 255, 0.65),
+      0 0 36px rgba(255, 255, 255, 0.30);
+  }
+}
+
+.duality-spotlight-request-btn {
+  position: absolute;
+  right: -58px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.15s ease;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+// ── Name row: actor name + class/hope feature rings ──────────────────────────
+//
+// Orb groups are pinned absolutely so the name is a true flex child:
+// this lets the row grow in height when the name wraps, while keeping
+// the name centred over the portrait regardless of orb count.
+
+.duality-name-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px 6px;
+  min-height: 62px; // tall enough for the orbs when name is one line
+  width: 100%;
+  margin-top: -18px; // pulls name row up 18px, shifting bars/portrait/hope track down by same amount
+
+  .duality-feature-rings--class {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .duality-feature-rings--right {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.duality-actor-name {
+  // max-width keeps the text from sliding under the pinned orb groups
+  // (right group ≈ 110px + padding; left group ≈ 50–160px + padding)
+  max-width: calc(100% - 260px);
+  font-family: $font-display;
+  font-size: 1.05rem;
+  letter-spacing: 0.10em;
+  color: $color-parchment-pale;
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 1.0),
+    0 0 6px rgba(0, 0, 0, 1.0),
+    0 3px 14px rgba(0, 0, 0, 1.0),
+    0 0 28px rgba(0, 0, 0, 0.95);
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+// ── Orb — canonical 44px glass-circle interactive button ─────────────────────
+//
+// Use `.duality-orb` on any circular icon/art button in this module.
+// Add `.duality-feature-ring` alongside it when the ring needs a tooltip anchor.
+
+.duality-orb {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba($color-gold, 0.50);
+  background: rgba($color-bg-dark, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: all;
+  padding: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  i {
+    font-size: 1.1rem;
+    color: $color-text-secondary;
+    transition: color 0.15s;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+
+  &:hover,
+  &.is-active {
+    border-color: $color-gold;
+    box-shadow: 0 0 10px rgba($color-gold, 0.55), 0 0 3px rgba($color-gold, 0.35) inset;
+    i { color: $color-gold-bright; }
+  }
+}
+
+// Adds `position: relative` for feature-panel / spotlight tooltip anchoring.
+.duality-feature-ring {
+  position: relative;
+}
+
+// Wrapper for multiple class feature rings (e.g. Sorcerer has 3)
+.duality-feature-rings {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+
+  &--right {
+    gap: 10px;
+  }
+}
+
+// ── Feature side panels ───────────────────────────────────────────────────────
+
+.duality-feature-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: rgba($color-bg-dark, 0.95);
+  border: 1px solid rgba($color-gold, 0.28);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms ease, transform 200ms ease;
+  z-index: 15;
+  overflow-y: auto;
+
+  &--left  { right: calc(100% + 12px); transform: translateX(8px);  }
+  &--right { left:  calc(100% + 12px); transform: translateX(-8px); }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    &.duality-feature-panel--left  { transform: translateX(0); }
+    &.duality-feature-panel--right { transform: translateX(0); }
+  }
+}
+
+.duality-feature-panel__header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.duality-feature-panel__art {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba($color-gold, 0.50);
+  flex-shrink: 0;
+}
+
+.duality-feature-panel__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.duality-feature-panel__label {
+  font-family: $font-display;
+  font-size: 0.52rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba($color-gold, 0.70);
+}
+
+.duality-feature-panel__name {
+  font-family: $font-display;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $color-parchment;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.duality-feature-panel__resource {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 6px 0;
+  border-top: 1px solid rgba($color-gold, 0.15);
+  border-bottom: 1px solid rgba($color-gold, 0.15);
+}
+
+.duality-feature-panel__die {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  background: rgba($color-bg-dark, 0.90);
+  border: 2px solid rgba($color-gold, 0.70);
+  color: $color-gold;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  transition: opacity 200ms ease, border-color 200ms ease;
+  &:hover:not(.is-spent) { border-color: $color-gold; box-shadow: 0 0 8px rgba($color-gold, 0.4); }
+  &.is-spent { opacity: 0.35; cursor: default; }
+}
+
+.duality-feature-panel__dice-pool { display: flex; flex-wrap: wrap; gap: 5px; }
+.duality-feature-panel__pool-die {
+  width: 16px; height: 16px; border-radius: 3px;
+  background: rgba($color-gold, 0.75); border: none; padding: 0; cursor: pointer;
+  transition: opacity 160ms ease, background 160ms ease;
+  &:hover { background: $color-gold; }
+  &.is-spent { background: rgba($color-gold, 0.18); &:hover { background: rgba($color-gold, 0.38); } }
+}
+
+.duality-feature-panel__prayer-dice { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.duality-prayer-die {
+  position: relative;
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  background: rgba($color-bg-dark, 0.90);
+  border: 2px solid rgba($color-gold, 0.70);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  transition: border-color 140ms ease, box-shadow 140ms ease, opacity 200ms ease;
+
+  &:hover:not(.is-spent) {
+    border-color: $color-gold;
+    box-shadow: 0 0 8px rgba($color-gold, 0.38);
+  }
+
+  &.is-spent {
+    opacity: 0.32;
+    border-color: rgba($color-gold, 0.22);
+    cursor: default;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 10%;
+      width: 80%; height: 2px;
+      background: rgba($color-danger, 0.65);
+      transform: translateY(-50%) rotate(-35deg);
+    }
+  }
+
+  &__value {
+    font-family: $font-display; font-size: 1rem; font-weight: 700;
+    color: $color-gold; line-height: 1; user-select: none;
+  }
+}
+
+.duality-feature-panel__roll-btn {
+  font-family: $font-display; font-size: 0.52rem; font-weight: 700;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: $color-parchment;
+  background: rgba($color-purple, 0.65);
+  border: 1px solid rgba($color-gold, 0.40);
+  border-radius: 4px; padding: 4px 10px; cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  align-self: flex-start;
+  &:hover { background: rgba($color-purple-bright, 0.80); border-color: rgba($color-gold, 0.70); }
+}
+
+.duality-feature-panel__d12-badge {
+  min-width: 36px; height: 36px; border-radius: 6px;
+  background: rgba($color-bg-dark, 0.90);
+  border: 2px solid rgba($color-gold, 0.70);
+  color: $color-gold;
+  font-family: $font-display; font-size: 1rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0 6px;
+  &:hover { border-color: $color-gold; box-shadow: 0 0 8px rgba($color-gold, 0.4); }
+}
+
+.duality-feature-panel__d12-picker {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; width: 100%;
+}
+
+.duality-feature-panel__d12-option {
+  height: 24px; border-radius: 3px;
+  background: rgba($color-gold, 0.10); border: 1px solid rgba($color-gold, 0.22);
+  color: rgba(#ece8e0, 0.80); font-size: 0.65rem; cursor: pointer; padding: 0;
+  &:hover { background: rgba($color-gold, 0.28); color: #ece8e0; }
+  &.is-active { background: rgba($color-gold, 0.45); border-color: rgba($color-gold, 0.70); color: #ece8e0; font-weight: 700; }
+}
+
+.duality-feature-panel__pips { display: flex; flex-wrap: wrap; gap: 5px; }
+.duality-feature-panel__pip {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba($color-gold, 0.18); border: 2px solid rgba($color-gold, 0.40);
+  color: rgba($color-gold, 0.50); font-size: 0.55rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  &:hover { border-color: rgba($color-gold, 0.70); }
+  &.is-filled { background: rgba($color-gold, 0.60); border-color: rgba($color-gold, 0.85); color: rgba(#ece8e0, 0.90); &:hover { background: rgba($color-gold, 0.40); } }
+}
+
+.duality-feature-panel__desc {
+  font-family: $font-ui; font-size: 0.60rem; line-height: 1.5;
+  color: rgba(#ece8e0, 0.85); overflow-y: auto; flex: 1 1 auto;
+  p { margin: 0 0 5px; } p:last-child { margin: 0; }
+  strong, b { font-weight: 700; color: #ece8e0; }
+  em, i { font-style: italic; }
+}
+
+// ── Info row: Evasion | Armour Slots | Major | Severe ──────────────────────────
+// Backed by a semi-transparent panel so floating labels read against any scene.
+
+.duality-info-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  background: rgba($color-bg-dark, 0.68);
+  border-radius: 8px;
+  padding: 6px 18px;
+  border: 1px solid rgba($color-gold, 0.14);
+  backdrop-filter: blur(6px);
+}
+
+// Evasion badge
+.duality-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  &__value {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $color-parchment-pale;
+    line-height: 1;
+    user-select: none;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+  }
+
+  &__label {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.90);
+    user-select: none;
+    white-space: nowrap;
+  }
+}
+
+// Armour slots badge
+.duality-armor-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  &__slots {
+    display: flex;
+    gap: 3px;
+  }
+
+  &__slot {
+    display: block;
+    flex-shrink: 0;
+    width: 11px;
+    height: 11px;
+    padding: 0;
+    margin: 0;
+    border-radius: 2px;
+    border: 1.5px solid rgba($color-gold, 0.38);
+    background: rgba($color-bg-raised, 0.60);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.60);
+    transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 0;
+    line-height: 0;
+
+    &.filled {
+      background: rgba($color-gold, 0.72);
+      border-color: $color-gold-mid;
+      box-shadow: 0 0 5px rgba($color-gold, 0.50);
+      &:hover { background: rgba($color-gold, 0.50); }
+    }
+
+    &:not(.filled):hover {
+      border-color: rgba($color-gold, 0.65);
+      background: rgba($color-gold, 0.20);
+    }
+  }
+
+  &__label {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.90);
+    user-select: none;
+    white-space: nowrap;
+  }
+}
+
+// Damage threshold columns — value above, label below
+.duality-threshold {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  &__value {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $color-text-secondary;
+    line-height: 1;
+    user-select: none;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+  }
+
+  &__label {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.90);
+    user-select: none;
+  }
+
+  &--minor .duality-threshold__value { color: $color-text-secondary; }
+  &--major .duality-threshold__value { color: $color-gold-mid; }
+  &--severe .duality-threshold__value {
+    color: rgba($color-danger, 0.90);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 12px rgba($color-danger, 0.30);
+  }
+}
+
+// ── Card hand ─────────────────────────────────────────────────────────────────
+
+#duality-card-hand {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  width: 100%;
+}
+
+// ── Card face — shown when no artwork image is available ──────────────────────
+
+.duality-card__face {
+  position: absolute;
+  top: 52px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border-radius: 5px;
+  border: 1px solid rgba($color-gold, 0.20);
+  background:
+    linear-gradient(135deg,
+      rgba($color-purple, 0.18) 0%,
+      rgba($color-bg-surface, 0.10) 40%,
+      rgba($color-gold, 0.08) 100%);
+  overflow: hidden;
+
+  // Diagonal corner ornament lines
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba($color-gold, 0.28);
+    border-style: solid;
+  }
+
+  &::before {
+    top: 5px;
+    left: 5px;
+    border-width: 1px 0 0 1px;
+    border-radius: 2px 0 0 0;
+  }
+
+  &::after {
+    bottom: 5px;
+    right: 5px;
+    border-width: 0 1px 1px 0;
+    border-radius: 0 0 2px 0;
+  }
+}
+
+// Central diamond sigil inside the face (nested element can't use ::before/::after
+// since those are already used — use a data-attribute trick via a child div instead,
+// or rely on the face element itself for ornaments and accept no center mark).
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+.duality-card {
+  position: relative;
+  pointer-events: all;
+  cursor: pointer;
+  width: 120px;
+  height: 180px;
+  border-radius: 10px;
+  border: 1px solid rgba($color-gold, 0.38);
+  background: linear-gradient(
+    160deg,
+    rgba($color-bg-raised, 0.97) 0%,
+    rgba($color-bg-surface, 0.92) 100%
+  );
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.62), 0 0 8px rgba($color-purple, 0.22);
+  transform-origin: bottom center;
+  // --duality-card-margin set dynamically by PlayerArea based on card count
+  margin: 0 var(--duality-card-margin, 6px);
+
+  // Subclass cards cluster together — tighter margin draws them into a family group
+  &.is-subclass {
+    margin: 0 max(-4px, calc(var(--duality-card-margin, 6px) - 26px));
+  }
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    z-index: 0;
+  }
+
+  &__name {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 6px 20px;
+    background: linear-gradient(rgba($color-bg-dark, 0.92) 0%, transparent 100%);
+    border-radius: 10px 10px 0 0;
+    font-family: $font-display;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: $color-text-secondary;
+    text-align: center;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    z-index: 2;
+  }
+
+  // Glass bead uses — row of gem-style orbs above the name strip
+  &__beads {
+    position: absolute;
+    top: 36px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 0 5px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &__bead {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    background: radial-gradient(
+      circle at 38% 30%,
+      rgba(255, 248, 200, 0.98) 0%,
+      rgba(220, 170, 30, 0.92) 28%,
+      rgba(160, 100, 8, 0.88) 62%,
+      rgba(90, 50, 0, 0.78) 100%
+    );
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.62),
+      0 1px 2px rgba(0, 0, 0, 0.38),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.26);
+
+    // Cup-shaped inner reflection at the bottom
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 16%; left: 16%;
+      width: 68%; height: 36%;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.42);
+      border-top: none;
+      box-sizing: border-box;
+    }
+
+    // Top specular highlight
+    &::after {
+      content: '';
+      position: absolute;
+      top: 10%; left: 22%;
+      width: 36%; height: 22%;
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: 50%;
+      filter: blur(0.5px);
+    }
+
+    &.is-empty {
+      background: radial-gradient(
+        circle at 38% 30%,
+        rgba(220, 200, 130, 0.16) 0%,
+        rgba(110, 72, 8, 0.10) 60%,
+        rgba(50, 25, 0, 0.08) 100%
+      );
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+      border: 1px solid rgba(215, 155, 20, 0.24);
+      &::before, &::after { opacity: 0; }
+    }
+  }
+}
+
+.duality-card-hand__empty {
+  color: rgba($color-text-muted, 0.40);
+  font-family: $font-ui;
+  font-size: 0.75rem;
+  font-style: italic;
+  pointer-events: none;
+  user-select: none;
+  padding: 0 8px 16px;
+}
+
+// ─── Subclass Tier Mini-Hand ──────────────────────────────────────────────────
+
+// Active card size — matches 5:7 ratio at 260px wide
+$tier-card-w: 260px;
+$tier-card-h: calc(#{$tier-card-w} * 7 / 5); // 364px
+
+.duality-spotlight-tiers {
+  position: relative;
+  width: $tier-card-w;
+  height: $tier-card-h;
+  // Peeking cards extend beyond bounds; backdrop dark bg shows through
+  overflow: visible;
+}
+
+.duality-spotlight-tier-card {
+  position: absolute;
+  inset: 0;
+  width: $tier-card-w;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid rgba($color-gold, 0.52);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 360ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity   360ms ease,
+    box-shadow 360ms ease;
+  will-change: transform, opacity;
+
+  &.is-active {
+    transform: translateX(0) rotate(0deg) scale(1);
+    z-index: 3;
+    cursor: default;
+    box-shadow:
+      0 0 0 1px rgba($color-gold, 0.18),
+      0 0 48px rgba($color-gold, 0.22),
+      0 24px 64px rgba(0, 0, 0, 0.92),
+      0 0 80px rgba($color-purple, 0.26);
+    opacity: 1;
+  }
+
+  &.is-prev {
+    transform: translateX(-165px) rotate(-5deg) scale(0.82);
+    z-index: 2;
+    opacity: 0.78;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.72);
+    &:hover { opacity: 0.92; }
+  }
+
+  &.is-next {
+    transform: translateX(165px) rotate(5deg) scale(0.82);
+    z-index: 2;
+    opacity: 0.78;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.72);
+    &:hover { opacity: 0.92; }
+  }
+
+  // Inner elements now use .duality-spotlight-card__* (same CSS as flat cards).
+  // Only positioning, size, animation and shadow live here.
+}
+
+// ── Trait badges — float above portrait on hover ──────────────────────────────
+// Position: absolute relative to .duality-portrait-wrap (position: relative)
+// Centered horizontally on the wrap; floats up above it.
+
+.duality-trait-badges {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 200ms ease, visibility 200ms ease;
+  z-index: 15;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+}
+
+.duality-trait-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: rgba($color-bg-raised, 0.92);
+  border: 1.5px solid rgba($color-gold, 0.40);
+  border-radius: 6px;
+  padding: 8px 8px 7px;
+  cursor: pointer;
+  min-width: 54px;
+  min-height: 58px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+
+  &:hover {
+    border-color: rgba($color-gold, 0.82);
+    background: rgba($color-bg-raised, 0.99);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.70), 0 0 12px rgba($color-gold, 0.32);
+  }
+
+  &.is-tier-marked {
+    border-color: rgba($color-gold, 0.70);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65), 0 0 8px rgba($color-gold, 0.28);
+  }
+
+  &__abbr {
+    font-family: $font-display;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    user-select: none;
+    line-height: 1;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-parchment-pale;
+    line-height: 1;
+    user-select: none;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.80);
+  }
+}
+
+// ── Weapon cards — float below portrait on hover ──────────────────────────────
+
+.duality-weapon-cards {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 200ms ease, visibility 200ms ease;
+  z-index: 15;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  &__none {
+    font-family: $font-ui;
+    font-size: 0.52rem;
+    font-style: italic;
+    color: $color-text-dim;
+    user-select: none;
+    align-self: center;
+  }
+}
+
+.duality-weapon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: rgba($color-bg-raised, 0.92);
+  border: 1.5px solid rgba($color-gold, 0.40);
+  border-radius: 6px;
+  padding: 7px 8px 8px;
+  cursor: pointer;
+  max-width: 80px;
+  min-height: 72px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    border-color: rgba($color-gold, 0.82);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.70), 0 0 12px rgba($color-gold, 0.32);
+  }
+
+  img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 0.46rem;
+    color: $color-text-secondary;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.2;
+    user-select: none;
+    max-width: 60px;
+  }
+
+  &__trait {
+    font-family: $font-display;
+    font-size: 0.42rem;
+    letter-spacing: 0.06em;
+    color: $color-text-muted;
+    user-select: none;
+  }
+}
+
+// ─── Card Spotlight Overlay ───────────────────────────────────────────────────
+
+#duality-spotlight { pointer-events: none; }
+
+.duality-spotlight-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba($color-bg-void, 0.80);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+}
+
+.duality-spotlight-card {
+  // 2.5" × 3.5" standard card ratio (5:7)
+  width: 300px;
+  aspect-ratio: 5 / 7;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid rgba($color-gold, 0.58);
+  box-shadow:
+    0 0 0 1px rgba($color-gold, 0.16),
+    0 0 48px rgba($color-gold, 0.18),
+    0 28px 72px rgba(0, 0, 0, 0.90),
+    0 0 90px rgba($color-purple, 0.24);
+  display: flex;
+  flex-direction: column;
+
+  // ── Artwork section — 42% of card height keeps art prominent ───────────────
+  &__art {
+    position: relative;
+    height: 42%;
+    overflow: hidden;
+    background: $color-bg-surface;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    // Gradient fade at bottom of art into the subtype banner
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 48px;
+      background: linear-gradient(transparent, rgba($color-bg-dark, 0.72));
+      pointer-events: none;
+    }
+  }
+
+  &__art-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba($color-purple, 0.42) 0%,
+      rgba($color-bg-surface, 0.22) 50%,
+      rgba($color-gold, 0.16) 100%
+    );
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px;
+      width: 22px; height: 22px;
+      border: 1px solid rgba($color-gold, 0.32);
+      border-right: none; border-bottom: none;
+      border-radius: 2px 0 0 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 12px; right: 12px;
+      width: 22px; height: 22px;
+      border: 1px solid rgba($color-gold, 0.32);
+      border-left: none; border-top: none;
+      border-radius: 0 0 2px 0;
+    }
+  }
+
+  // ── Level badge — hexagonal shield shape, top-left ──────────────────────────
+  &__level {
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 28px; height: 32px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: rgba($color-bg-void, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-display;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $color-gold-bright;
+    text-shadow: 0 0 8px rgba($color-gold, 0.65);
+    z-index: 2;
+  }
+
+  // ── Recall cost badge — circle, top-right ───────────────────────────────────
+  &__recall {
+    position: absolute;
+    top: 8px; right: 8px;
+    min-width: 28px; height: 28px;
+    padding: 0 5px;
+    border-radius: 14px;
+    background: rgba($color-bg-void, 0.92);
+    border: 1.5px solid rgba($color-gold, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-family: $font-display;
+    font-size: 0.70rem;
+    font-weight: 700;
+    color: $color-gold-bright;
+    z-index: 2;
+  }
+
+  &__bolt { font-size: 0.55rem; opacity: 0.88; }
+
+  // ── Uses badge — pill centred at top of art, shown only when uses are limited ─
+  &__uses {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba($color-bg-void, 0.92);
+    border: 1.5px solid rgba($color-gold, 0.52);
+    border-radius: 12px;
+    padding: 3px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    z-index: 2;
+    white-space: nowrap;
+
+    &-label {
+      font-family: $font-display;
+      font-size: 0.42rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: $color-text-muted;
+      line-height: 1;
+      user-select: none;
+    }
+
+    &-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    &-count {
+      font-family: $font-display;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: $color-gold-bright;
+      text-shadow: 0 0 8px rgba($color-gold, 0.65);
+      line-height: 1;
+    }
+
+    &-sep {
+      font-size: 0.60rem;
+      font-weight: 400;
+      opacity: 0.60;
+    }
+
+    &-btn {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba($color-gold, 0.18);
+      border: 1px solid rgba($color-gold, 0.45);
+      color: $color-gold-bright;
+      font-size: 0.80rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; padding: 0; line-height: 1;
+      transition: background 120ms ease, border-color 120ms ease;
+
+      &:hover:not(:disabled) {
+        background: rgba($color-gold, 0.40);
+        border-color: $color-gold;
+      }
+      &:disabled { opacity: 0.28; cursor: default; }
+    }
+  }
+
+  // ── Subtype banner — gold bar bridging art and body ──────────────────────────
+  &__subtype {
+    background: linear-gradient(
+      90deg,
+      $color-bg-dark 0%,
+      rgba($color-gold, 0.90) 12%,
+      rgba($color-gold, 0.90) 88%,
+      $color-bg-dark 100%
+    );
+    padding: 4px 0;
+    text-align: center;
+    font-family: $font-display;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: $color-bg-dark;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  // ── Body — parchment text area, fills remaining card height ─────────────────
+  &__body {
+    background: linear-gradient(180deg, $color-parchment-pale 0%, #F0E2C4 100%);
+    padding: 10px 12px 6px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: rgba($color-bg-dark, 0.08); }
+    &::-webkit-scrollbar-thumb { background: rgba($color-gold, 0.38); border-radius: 2px; }
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $color-bg-dark;
+    text-align: center;
+    margin: 0 0 7px;
+    line-height: 1.2;
+  }
+
+  &__desc {
+    font-family: $font-ui;
+    font-size: 0.60rem;
+    color: rgba($color-bg-dark, 0.80);
+    line-height: 1.50;
+
+    p { margin: 0 0 5px; }
+    p:last-child { margin-bottom: 0; }
+    strong, b { font-weight: 700; color: $color-bg-dark; }
+    em, i { font-style: italic; }
+  }
+
+  // ── Per-feature breakdown in body (identity & subclass tier cards) ───────────
+  &__feature-name {
+    font-family: $font-display;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: $color-bg-dark;
+    margin: 8px 0 3px;
+
+    &:first-of-type { margin-top: 0; }
+  }
+
+  &__feature-desc {
+    font-family: $font-ui;
+    font-size: 0.57rem;
+    color: rgba($color-bg-dark, 0.82);
+    line-height: 1.48;
+    margin-bottom: 6px;
+
+    &:last-child { margin-bottom: 0; }
+    p { margin: 0 0 4px; }
+    p:last-child { margin-bottom: 0; }
+    strong, b { font-weight: 700; color: $color-bg-dark; }
+    em, i { font-style: italic; }
+    ul { margin: 3px 0; padding-left: 12px; }
+    li { margin-bottom: 2px; }
+  }
+
+  // ── Footer — use ability button ──────────────────────────────────────────────
+  &__footer {
+    background: #EDE0C2;
+    border-top: 1px solid rgba($color-bg-dark, 0.14);
+    padding: 7px 12px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  &__use-btn {
+    font-family: $font-display;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color-parchment-pale;
+    background: linear-gradient(
+      135deg,
+      rgba($color-purple, 0.96),
+      rgba($color-purple-bright, 0.82)
+    );
+    border: 1.5px solid rgba($color-gold, 0.55);
+    border-radius: 5px;
+    padding: 6px 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.50), 0 0 18px rgba($color-purple, 0.22);
+    transition: box-shadow 180ms ease, transform 120ms ease, border-color 180ms ease;
+
+    &:hover {
+      box-shadow: 0 4px 22px rgba($color-purple, 0.65), 0 0 22px rgba($color-gold, 0.32);
+      border-color: rgba($color-gold, 0.88);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+    }
+  }
+}
+
+// ─── Cinematic Reveal Overlay ─────────────────────────────────────────────────
+
+#duality-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+
+  &:empty { display: none; }
+}
+
+.duality-reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center,
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+  pointer-events: all;
+  cursor: pointer;
+  // opacity animated by GSAP; starts at 0
+  opacity: 0;
+}
+
+.duality-reveal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 40px var(--domain-secondary))
+    drop-shadow(0 0 80px var(--domain-primary));
+}
+
+.duality-reveal-card__art {
+  width: 260px;
+  height: 390px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--domain-secondary);
+  box-shadow:
+    0 0 30px var(--domain-secondary),
+    0 20px 60px rgba(0, 0, 0, 0.85),
+    inset 0 0 20px rgba(0, 0, 0, 0.30);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.duality-reveal-card__art-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--domain-primary), var(--domain-secondary));
+  opacity: 0.6;
+}
+
+.duality-reveal-card__name {
+  font-family: $font-display;
+  font-size: 1.6rem;
+  color: $color-parchment-pale;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 0 10px var(--domain-secondary),
+    0 0 3px rgba(0, 0, 0, 1),
+    0 0 20px rgba(0, 0, 0, 0.90);
+}
+
+.duality-reveal-card__domain {
+  font-family: $font-display;
+  font-size: 0.85rem;
+  color: var(--domain-accent);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.90);
+}
+
+.duality-reveal-shard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  background: var(--domain-secondary);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  pointer-events: none;
+  opacity: 0; // GSAP animates this
+}
+
+// ─── Macro bar toggle button ──────────────────────────────────────────────────
+// Injected as a native .control.layer button — Foundry handles sizing/hover.
+// Only override the active state.
+
+#duality-macrobar-toggle[aria-pressed="true"] {
+  color: $color-gold-mid;
+  text-shadow: 0 0 8px rgba($color-gold, 0.6);
+}
+
+// ─── Card Vault ────────────────────────────────────────────────────────────────
+
+.duality-vault-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: all;
+  color: $color-text-muted;
+
+  i {
+    font-size: 0.95rem;
+    line-height: 1;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+  }
+
+  span {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.90);
+    user-select: none;
+  }
+
+  &:hover, &.is-active {
+    color: $color-gold-mid;
+  }
+}
+
+.duality-vault-panel__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  pointer-events: all;
+  background: transparent;
+}
+
+.duality-vault-panel {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, 90vw);
+  max-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: rgba(10, 8, 5, 0.94);
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: 10px 10px 0 0;
+  padding: 16px 20px 12px;
+  z-index: 200;
+  pointer-events: all;
+}
+
+.duality-vault-panel__body {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.duality-vault-panel__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.duality-vault-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.duality-vault-zone__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-display;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(212, 160, 23, 0.7);
+}
+
+.duality-vault-zone__capacity {
+  font-size: 0.65rem;
+  color: rgba(254, 249, 231, 0.5);
+}
+
+.duality-vault-zone__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 0;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  transition: border-color 0.15s, background 0.15s;
+
+  &.is-drag-over {
+    border-color: rgba(212, 160, 23, 0.6);
+    background: rgba(212, 160, 23, 0.06);
+  }
+
+  &.is-full {
+    border-color: rgba(220, 80, 80, 0.3);
+  }
+}
+
+.duality-vault-zone__empty {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.25);
+  align-self: center;
+  padding: 4px 8px;
+  font-style: italic;
+}
+
+.duality-vault-card {
+  aspect-ratio: 5 / 7;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: grab;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.15s, border-color 0.15s, opacity 0.15s;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(212, 160, 23, 0.6);
+  }
+
+  &:active { cursor: grabbing; }
+
+  &.is-drag-over {
+    border-color: rgba(212, 160, 23, 0.9);
+    transform: translateY(-3px);
+  }
+
+  &.is-dragging { opacity: 0.45; }
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.duality-vault-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 25, 15, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(212, 160, 23, 0.3);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 4px;
+}
+
+.duality-vault-card__name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.70rem;
+  text-align: center;
+  padding: 5px 7px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fef9e7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.duality-vault-card__cost {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: rgba(212, 160, 23, 0.9);
+  padding: 1px 3px;
+  border-radius: 3px;
+  line-height: 1.2;
+}
+
+.duality-vault-slot-empty {
+  aspect-ratio: 5 / 7;
+  border-radius: 5px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  flex-shrink: 0;
+}
+
+.duality-vault-cost {
+  font-family: $font-display;
+  font-size: 0.62rem;
+  color: rgba(254, 249, 231, 0.6);
+  text-align: center;
+  line-height: 1.3;
+
+  &.is-overflow { color: #e74c3c; }
+}
+
+.duality-vault-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  min-width: 110px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+// Hand zone: flex row — [card area] [action buttons]
+// Cards shown as compact thumbnails; size fixed so the zone stays narrow.
+.duality-vault-zone--hand {
+  flex-direction: row;
+  align-items: stretch;
+  flex-shrink: 0;
+  gap: 0;
+
+  .duality-vault-card,
+  .duality-vault-slot-empty {
+    flex: 0 0 88px;
+  }
+
+  .duality-vault-card__level {
+    width: 20px; height: 23px;
+    font-size: 0.55rem;
+    top: 4px; left: 4px;
+  }
+}
+
+.duality-vault-zone__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.duality-vault-zone__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding-left: 14px;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+// Vault zone: grows to fit all cards; panel max-height is the only overflow guard.
+// Cards are fluid — exactly 8 per row regardless of actual panel width.
+// Formula: (container_inner_width − 7 gaps) ÷ 8  where gap = 8px.
+.duality-vault-zone--vault {
+  .duality-vault-zone__cards {
+    align-content: flex-start;
+  }
+
+  .duality-vault-card,
+  .duality-vault-slot-empty {
+    flex: 0 0 calc((100% - 7 * 8px) / 8);
+  }
+}
+
+.duality-vault-card__level {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 32px;
+  height: 37px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: rgba($color-bg-void, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-display;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $color-gold-bright;
+  z-index: 2;
+}
+
+.duality-vault-tooltip {
+  position: fixed;
+  z-index: 250;
+  width: 340px;
+  max-height: 480px;
+  overflow-y: auto;
+  pointer-events: none;
+  background: rgba(8, 5, 16, 0.97);
+  border: 1px solid rgba(212, 160, 23, 0.45);
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.88),
+    0 0 0 1px rgba(212, 160, 23, 0.07);
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: rgba($color-gold, 0.30); border-radius: 2px; }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  &__level {
+    flex-shrink: 0;
+    width: 28px;
+    height: 32px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: rgba($color-bg-void, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-display;
+    font-size: 0.80rem;
+    font-weight: 700;
+    color: $color-gold-bright;
+  }
+
+  &__name {
+    flex: 1;
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: $color-parchment-pale;
+    line-height: 1.2;
+  }
+
+  &__cost {
+    flex-shrink: 0;
+    font-family: $font-display;
+    font-size: 0.80rem;
+    color: $color-gold;
+    background: rgba($color-bg-void, 0.80);
+    border: 1px solid rgba($color-gold, 0.35);
+    border-radius: 12px;
+    padding: 2px 8px;
+  }
+
+  &__meta {
+    font-family: $font-display;
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($color-gold, 0.65);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba($color-gold, 0.12);
+  }
+
+  &__desc {
+    font-family: $font-ui;
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: rgba($color-parchment-pale, 0.82);
+
+    p { margin: 0 0 6px; }
+    p:last-child { margin-bottom: 0; }
+    strong, b { font-weight: 700; color: $color-parchment-pale; }
+    em, i { font-style: italic; }
+    ul { margin: 4px 0; padding-left: 14px; }
+    li { margin-bottom: 3px; }
+  }
+
+  &__empty {
+    font-family: $font-ui;
+    font-style: italic;
+    font-size: 0.65rem;
+    color: rgba($color-parchment-pale, 0.30);
+    margin: 0;
+  }
+}
+
+.duality-vault-btn--confirm,
+.duality-vault-btn--pay {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-family: $font-display;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.duality-vault-btn--confirm {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(254, 249, 231, 0.7);
+
+  &:hover { background: rgba(255, 255, 255, 0.14); }
+}
+
+.duality-vault-btn--pay {
+  background: rgba(212, 160, 23, 0.18);
+  border: 1px solid rgba(212, 160, 23, 0.5);
+  color: #d4a017;
+
+  &:hover { background: rgba(212, 160, 23, 0.28); }
+
+  &.is-overflow {
+    border-color: rgba(231, 76, 60, 0.6);
+    color: #e74c3c;
+  }
+}
+
+// ─── Hope Feature Reveal ──────────────────────────────────────────────────────
+// Inverted from CardReveal: warm gold radiance at center, dark at edges.
+// The orb is the centrepiece; rays, cracks, and motes emanate from it.
+
+.duality-hope-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 200, 66, 0.22) 0%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  opacity: 0;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.duality-hope-flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 248, 220, 1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+// The scene is sized to the orb (160×160); all other elements overflow visibly.
+.duality-hope-scene {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  overflow: visible;
+}
+
+// Shared positioning for the rays and cracks containers
+.duality-hope-rays,
+.duality-hope-cracks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+// Each ray wrapper is pinned to the orb center and rotated to a compass angle.
+// The inner ray div extends upward from the wrapper's origin.
+.duality-hope-ray-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+
+.duality-hope-ray {
+  position: absolute;
+  // width / height / left / top supplied via inline style
+  background: linear-gradient(to top, rgba(245, 200, 66, 0.85) 0%, rgba(245, 200, 66, 0) 100%);
+  opacity: 0; // GSAP animates
+}
+
+.duality-hope-crack-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+
+.duality-hope-crack {
+  position: absolute;
+  width: 2px;
+  height: 140px;
+  left: -1px;
+  top: -140px; // extends upward from wrapper origin (orb center)
+  background: linear-gradient(to top, rgba(232, 146, 10, 0.95) 0%, rgba(255, 255, 200, 0) 100%);
+  opacity: 0; // GSAP animates
+}
+
+.duality-hope-mote {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -3px 0 0 -3px; // center the 6×6 circle on the 50%/50% point
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff8e7 0%, rgba(245, 200, 66, 0.6) 100%);
+  pointer-events: none;
+  opacity: 0; // GSAP animates
+}
+
+.duality-hope-orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(245, 200, 66, 0.9);
+  box-shadow:
+    0 0 40px rgba(245, 200, 66, 0.7),
+    0 0 100px rgba(245, 200, 66, 0.35),
+    inset 0 0 30px rgba(245, 200, 66, 0.2);
+  background: radial-gradient(circle at 40% 35%, rgba(255, 255, 220, 0.4), rgba(30, 20, 0, 0.85));
+  overflow: hidden;
+  z-index: 2;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Text block — positioned absolutely below the orb
+.duality-hope-text {
+  position: absolute;
+  top: calc(100% + 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.duality-hope-name {
+  font-family: $font-display;
+  font-size: 1.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff8e7;
+  text-align: center;
+  text-shadow:
+    0 0 12px rgba(245, 200, 66, 0.9),
+    0 0 4px rgba(0, 0, 0, 1),
+    0 0 30px rgba(245, 200, 66, 0.5);
+  max-width: 480px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0; // GSAP animates
+}
+
+.duality-hope-subtitle {
+  font-family: $font-display;
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(245, 200, 66, 0.85);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+  opacity: 0; // GSAP animates
+}
+
+// ─── Companion card slot — modifier on .duality-card ─────────────────────────
+// Base card dimensions, border, background, transform-origin all come from .duality-card.
+
+.duality-companion-slot {
+  &__badges {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+    z-index: 3;
+  }
+
+  &__badge {
+    background: rgba($color-bg-void, 0.80);
+    color: $color-gold-bright;
+    font-family: $font-ui;
+    font-size: 0.55rem;
+    font-weight: 600;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+}
+
+// ─── Companion panel ──────────────────────────────────────────────────────────
+
+.duality-companion-panel__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  background: transparent;
+}
+
+.duality-companion-panel {
+  position: fixed;
+  // bottom and right set via inline style from slotRight prop
+  width: 240px;
+  background: linear-gradient(160deg, $color-bg-raised 0%, $color-bg-surface 100%);
+  border: 1px solid rgba($color-gold, 0.28);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 200;
+  color: $color-text-primary;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.72), 0 0 12px rgba($color-purple, 0.22);
+  pointer-events: all;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  &__art {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba($color-gold, 0.28);
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__type {
+    display: block;
+    font-family: $font-ui;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: $color-text-muted;
+    line-height: 1.2;
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $color-text-secondary;
+    margin: 0;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--link {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: color 0.13s;
+
+      &:hover {
+        color: $color-gold-bright;
+        text-decoration: underline;
+        text-decoration-color: rgba($color-gold, 0.45);
+      }
+    }
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: $color-text-muted;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 1; color: $color-text-primary; }
+  }
+
+  &__stats {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  &__stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba($color-bg-void, 0.38);
+    border: 1px solid rgba($color-gold, 0.16);
+    border-radius: 6px;
+    padding: 5px 4px;
+
+    &-value {
+      font-family: $font-display;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: $color-gold-bright;
+      line-height: 1.1;
+    }
+
+    &-label {
+      font-family: $font-ui;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: $color-text-muted;
+      line-height: 1.4;
+    }
+  }
+
+  &__section-label {
+    display: block;
+    font-family: $font-ui;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: $color-text-muted;
+    margin-bottom: 5px;
+  }
+
+  &__stress {
+    margin-bottom: 12px;
+  }
+
+  &__beads {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+    margin-bottom: 3px;
+  }
+
+  &__stress-value {
+    font-family: $font-ui;
+    font-size: 0.62rem;
+    color: $color-text-muted;
+  }
+
+  &__rolls {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__roll {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    background: rgba($color-bg-void, 0.28);
+    border: 1px solid rgba($color-gold, 0.12);
+    border-radius: 6px;
+    padding: 5px 8px;
+  }
+
+  &__roll-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__roll-label {
+    font-family: $font-ui;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $color-text-muted;
+  }
+
+  &__roll-formula {
+    font-family: $font-display;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $color-gold-mid;
+  }
+
+  &__roll-btn {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, $color-purple 0%, $color-purple-bright 100%);
+    border: 1px solid rgba($color-gold, 0.22);
+    border-radius: 5px;
+    color: $color-text-primary;
+    font-family: $font-ui;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.1s;
+
+    &:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Fix click-away: parent has pointer-events:none so overlay needs explicit re-enable
+  &__overlay {
+    pointer-events: all;
+  }
+
+  &__bead-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: transform 0.12s;
+
+    &:hover { transform: scale(1.25); }
+
+    .duality-card__bead { pointer-events: none; }
+  }
+}
+
+// ─── Inventory orb — uses .duality-orb directly, no modifier needed ──────────
+
+// ─── Inventory panel ──────────────────────────────────────────────────────────
+
+.duality-inventory-panel__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  pointer-events: all;
+  background: transparent;
+}
+
+.duality-inventory-panel {
+  position: fixed;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
+  max-height: calc(100vh - 260px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, $color-bg-raised 0%, $color-bg-surface 100%);
+  border: 1px solid rgba($color-gold, 0.28);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.72), 0 0 12px rgba($color-purple, 0.22);
+  z-index: 200;
+  pointer-events: all;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba($color-gold, 0.16);
+    flex-shrink: 0;
+  }
+
+  &__icon {
+    color: $color-gold-mid;
+    font-size: 1rem;
+  }
+
+  &__title {
+    flex: 1;
+    font-family: $font-display;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: $color-text-secondary;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: $color-text-muted;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 1; color: $color-text-primary; }
+  }
+
+  &__body {
+    overflow-y: auto;
+    padding: 8px 0;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: rgba($color-gold, 0.22); border-radius: 2px; }
+  }
+
+  &__empty {
+    padding: 24px;
+    text-align: center;
+    font-family: $font-ui;
+    font-size: 0.78rem;
+    color: $color-text-muted;
+  }
+
+  &.is-drag-over {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.72),
+      0 0 12px rgba($color-purple, 0.22),
+      0 0 0 2px rgba($color-gold, 0.60);
+    border-color: rgba($color-gold, 0.65);
+  }
+}
+
+// ─── Gold / Currency section ──────────────────────────────────────────────────
+
+.duality-inventory-gold {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  padding: 10px 14px 12px;
+  border-bottom: 1px solid rgba($color-gold, 0.14);
+  flex-shrink: 0;
+
+  &__cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: $font-ui;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-text-secondary;
+
+    i {
+      color: $color-gold-mid;
+      font-size: 0.72rem;
+      width: 12px;
+      text-align: center;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    background: rgba($color-bg-void, 0.55);
+    border: 1px solid rgba($color-gold, 0.22);
+    border-radius: 5px;
+    color: $color-text-primary;
+    font-family: $font-ui;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 4px 6px;
+    pointer-events: all;
+    transition: border-color 0.15s;
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-gold, 0.55);
+      background: rgba($color-bg-void, 0.75);
+    }
+
+    // remove number spinner arrows
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    -moz-appearance: textfield;
+  }
+}
+
+// ─── Inventory section (mirrors "glassy drop-section" from character sheet) ───
+
+.duality-inventory-section {
+  border: none;
+  margin: 0;
+  padding: 0 12px 8px;
+
+  &__legend {
+    width: 100%;
+    padding: 6px 4px;
+    font-family: $font-display;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    border-bottom: 1px solid rgba($color-gold, 0.14);
+    margin-bottom: 4px;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+// ─── Inventory item row ───────────────────────────────────────────────────────
+
+.duality-inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px;
+  border-radius: 6px;
+  transition: background 0.12s;
+
+  &:hover {
+    background: rgba($color-bg-void, 0.30);
+  }
+
+  &.is-equipped {
+    background: rgba($color-purple, 0.14);
+    border: 1px solid rgba($color-purple-bright, 0.22);
+    border-radius: 6px;
+
+    &:hover { background: rgba($color-purple, 0.22); }
+  }
+
+  &__img-wrap {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+  }
+
+  &__img {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    object-fit: cover;
+    display: block;
+
+    &--placeholder {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: rgba($color-bg-void, 0.50);
+      border: 1px solid rgba($color-gold, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 0.7rem;
+        color: $color-text-dim;
+      }
+    }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-family: $font-ui;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: $color-text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  &__badge {
+    font-family: $font-ui;
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba($color-bg-void, 0.55);
+    color: $color-text-muted;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    &--burden {
+      background: rgba($color-purple, 0.25);
+      color: $color-text-secondary;
+
+      &.is-two-handed {
+        background: rgba($color-gold, 0.20);
+        color: $color-gold-mid;
+      }
+    }
+
+    &--range { color: $color-text-secondary; }
+    &--trait { background: rgba($color-purple-bright, 0.18); color: $color-purple-bright; }
+    &--dmg   { color: $color-gold-mid; background: rgba($color-gold, 0.14); }
+
+    &--slot {
+      background: rgba($color-purple-bright, 0.25);
+      color: $color-purple-bright;
+    }
+
+    &--armor-slots {
+      color: $color-text-secondary;
+      background: rgba($color-bg-surface, 0.60);
+    }
+  }
+
+  &__qty {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    font-family: $font-display;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: $color-gold-mid;
+    cursor: text;
+
+    input[type="number"] {
+      width: 32px;
+      background: rgba($color-bg-void, 0.55);
+      border: 1px solid rgba($color-gold, 0.20);
+      border-radius: 4px;
+      color: $color-text-primary;
+      font-family: $font-display;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 1px 2px;
+      pointer-events: all;
+      transition: border-color 0.13s;
+
+      &:focus {
+        outline: none;
+        border-color: rgba($color-gold, 0.50);
+        background: rgba($color-bg-void, 0.80);
+      }
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+      -moz-appearance: textfield;
+    }
+  }
+
+  &__img-wrap--usable {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: box-shadow 0.13s, opacity 0.13s;
+
+    &:hover {
+      opacity: 0.80;
+      box-shadow: 0 0 0 2px rgba($color-gold, 0.45);
+    }
+  }
+
+  &__controls {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  &__ctrl-btn {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    border: 1px solid rgba($color-gold, 0.16);
+    background: rgba($color-bg-void, 0.40);
+    color: $color-text-dim;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.13s, color 0.13s, border-color 0.13s;
+
+    i { font-size: 0.68rem; }
+
+    &:hover {
+      background: rgba($color-purple, 0.28);
+      color: $color-text-primary;
+      border-color: rgba($color-purple-bright, 0.38);
+    }
+
+    &.is-equipped {
+      background: rgba($color-purple, 0.35);
+      color: $color-purple-bright;
+      border-color: rgba($color-purple-bright, 0.45);
+
+      &:hover {
+        background: rgba($color-danger, 0.25);
+        color: $color-danger;
+        border-color: rgba($color-danger, 0.40);
+      }
+    }
+  }
+
+  &__use-btn {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    border: 1px solid rgba($color-gold, 0.18);
+    background: rgba($color-bg-void, 0.45);
+    color: $color-text-dim;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    i { font-size: 0.68rem; }
+
+    &:hover {
+      border-color: rgba($color-gold, 0.55);
+      box-shadow: 0 0 6px rgba($color-gold, 0.30);
+    }
+  }
+}
+
+// ─── Item context-menu dropdown ────────────────────────────────────────────────
+
+.duality-inventory-item__menu-dropdown {
+  position: fixed;
+  z-index: 210;
+  min-width: 148px;
+  background: linear-gradient(160deg, $color-bg-raised 0%, $color-bg-surface 100%);
+  border: 1px solid rgba($color-gold, 0.28);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.72), 0 0 8px rgba($color-purple, 0.18);
+  overflow: hidden;
+  pointer-events: all;
+}
+
+.duality-inventory-item__menu-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  background: none;
+  border: none;
+  color: $color-text-secondary;
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+
+  i {
+    width: 13px;
+    text-align: center;
+    font-size: 0.72rem;
+    color: $color-text-muted;
+    transition: color 0.12s;
+  }
+
+  &:hover {
+    background: rgba($color-purple, 0.22);
+    color: $color-text-primary;
+    i { color: $color-purple-bright; }
+  }
+
+  &--danger {
+    color: rgba($color-danger, 0.80);
+    i { color: rgba($color-danger, 0.65); }
+
+    &:hover {
+      background: rgba($color-danger, 0.18);
+      color: $color-danger;
+      i { color: $color-danger; }
+    }
+  }
+}
+
+// ── The Stage ─────────────────────────────────────────────────────────────────
+
+#duality-stage {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  gap: 14px;
+  pointer-events: none;
+
+  .duality-stage-portrait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    img {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      border: 2px solid rgba($color-gold, 0.72);
+      box-shadow:
+        0 0 18px rgba($color-gold, 0.38),
+        0 4px 14px rgba(0, 0, 0, 0.65);
+      object-fit: cover;
+    }
+
+    &__name {
+      font-family: $font-display;
+      font-size: 0.93rem;
+      letter-spacing: 0.03em;
+      color: rgba(#ece8e0, 0.92);
+      background: rgba(0, 0, 0, 0.58);
+      padding: 1px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+}

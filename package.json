@@ -1,0 +1,21 @@
+{
+  "name": "duality-cardflow",
+  "version": "1.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "gsap": "^3.12.0",
+    "sass": "^1.77.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.5.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.0.0"
+  }
+}

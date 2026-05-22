@@ -1,0 +1,15 @@
+{
+  "DUALITY_CARDFLOW.ModuleName": "Project Duality: Cardflow",
+  "DUALITY_CARDFLOW.Settings.AnimationSpeed.Name": "Animation Speed",
+  "DUALITY_CARDFLOW.Settings.AnimationSpeed.Hint": "Speed of card draw and interaction animations.",
+  "DUALITY_CARDFLOW.Settings.AnimationSpeed.Fast": "Fast",
+  "DUALITY_CARDFLOW.Settings.AnimationSpeed.Normal": "Normal",
+  "DUALITY_CARDFLOW.Settings.AnimationSpeed.Cinematic": "Cinematic (Slow)",
+  "DUALITY_CARDFLOW.Settings.CinematicReveal.Name": "Cinematic Card Reveal",
+  "DUALITY_CARDFLOW.Settings.CinematicReveal.Hint": "Play a full-screen cinematic animation for all players when a card ability is used. (GM setting)",
+  "DUALITY_CARDFLOW.Settings.GMHandVisibility.Name": "GM Hand Visibility",
+  "DUALITY_CARDFLOW.Settings.GMHandVisibility.Hint": "Allow the GM to see all players' card hands.",
+  "DUALITY_CARDFLOW.CardHand.Title": "Card Hand",
+  "DUALITY_CARDFLOW.CardHand.Empty": "No cards in hand",
+  "DUALITY_CARDFLOW.CardHand.DrawCard": "Draw Card"
+}
