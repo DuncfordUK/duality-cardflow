@@ -2,6 +2,16 @@
 
 ---
 
+## [1.5.1] — 2026-05-22
+
+### Bug Fixes
+
+- **Armour slots not appearing after equip** — Daggerheart fires `updateActor` (thresholds) before `updateItem` (equipped flag). A next-tick scheduler (`setTimeout 0`) on the three item hooks ensures both writes have settled before `readActor()` runs; also eliminates a secondary window where stale `armorSlots = 0` could cause an incorrect write to `system.armor.current` if a slot pip was clicked mid-flight
+- **Player dashboard blank after character assignment** — `updateUser` hook added; when the GM assigns or reassigns an actor to a player, the dashboard populates immediately without requiring a page reload
+- **Armour base score audit** — confirmed that the module never writes to `system.armor.max`; all armour-related writes are limited to `system.armor.current` (slot marks) and `system.equipped`
+
+---
+
 ## [1.5.0] — 2026-05-22
 
 ### GM Dashboard

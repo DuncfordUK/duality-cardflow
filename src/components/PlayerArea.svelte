@@ -102,6 +102,19 @@
   let showCharacterPanel    = $state(false);
   let panelHideTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Next-tick debounce for item-hook-triggered actor reads.
+  // Daggerheart's equip flow fires updateActor (thresholds) before updateItem
+  // (equipped flag). Yielding to the event loop ensures both writes have
+  // settled before we read item state, preventing the stale-equipped race.
+  let readActorTimerId: ReturnType<typeof setTimeout> | null = null;
+  function scheduleReadActor(): void {
+    if (readActorTimerId) return;
+    readActorTimerId = setTimeout(() => {
+      readActorTimerId = null;
+      readActor();
+    }, 0);
+  }
+
   // ── Vault ────────────────────────────────────────────────────────────────────
   interface VaultCard { id: string; name: string; img: string; recallCost?: number; domain?: string; level?: number; description?: string; subtype?: string; }
 
@@ -893,9 +906,14 @@
     onReady?.();
     // updateItem covers armor marks changes (armor data lives on the item, not the actor)
     const actorHookId      = Hooks.on('updateActor', () => { readActor(); readSpotlightState(); });
-    const itemHookId       = Hooks.on('updateItem',  readActor);
-    const createItemHookId = Hooks.on('createItem',  readActor);
-    const deleteItemHookId = Hooks.on('deleteItem',  readActor);
+    const itemHookId       = Hooks.on('updateItem',  scheduleReadActor);
+    const createItemHookId = Hooks.on('createItem',  scheduleReadActor);
+    const deleteItemHookId = Hooks.on('deleteItem',  scheduleReadActor);
+    // updateUser fires when the GM assigns (or reassigns) a character to this player.
+    // Without this hook the dashboard stays blank until a manual page reload.
+    const userHookId       = Hooks.on('updateUser',  (user: any) => {
+      if (user.id === (game.user as any).id) { readActor(); readSpotlightState(); }
+    });
     const h0 = Hooks.on('updateCombat',    readSpotlightState);
     const h1 = Hooks.on('updateCombatant', readSpotlightState);
     const h2 = Hooks.on('createCombat',    readSpotlightState);
@@ -907,6 +925,8 @@
       Hooks.off('updateItem',  itemHookId);
       Hooks.off('createItem',  createItemHookId);
       Hooks.off('deleteItem',  deleteItemHookId);
+      Hooks.off('updateUser',  userHookId);
+      if (readActorTimerId) { clearTimeout(readActorTimerId); readActorTimerId = null; }
       Hooks.off('updateCombat',    h0);
       Hooks.off('updateCombatant', h1);
       Hooks.off('createCombat',    h2);

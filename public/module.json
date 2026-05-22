@@ -2,7 +2,7 @@
   "id": "duality-cardflow",
   "title": "Project Duality: Cardflow",
   "description": "Animated card interactions for Daggerheart on Foundry VTT. Tactile card draws, fan layouts, hover zoom, GM hand visibility, and cinematic reveal effects.",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -27,5 +27,5 @@
     "duality": true
   },
   "manifest": "https://raw.githubusercontent.com/DuncfordUK/duality-cardflow/main/dist/module.json",
-  "download": "https://github.com/DuncfordUK/duality-cardflow/releases/download/v1.5.0/duality-cardflow.zip"
+  "download": "https://github.com/DuncfordUK/duality-cardflow/releases/download/v1.5.1/duality-cardflow.zip"
 }
