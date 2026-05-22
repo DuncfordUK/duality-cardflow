@@ -6,15 +6,19 @@ A Foundry VTT module for **Daggerheart** that replaces the default player interf
 
 **Warning:** This is a work in progress that has been tested on my local instance of Foundry running Daggerheart and Dice so Nice. Please back-up any World before deploying this module, in the unlikely event that something goes catastrophically wrong!
 
----
 
+# Project Duality
 One of the unique components of Daggerheart is its card system, and I lamented that the official VTT implementation over at demiplane made no attempt to replicate this unique, tactile aspect of the game.
 So, standing on the shoulders of the giants over at Foundryborne, I wanted to offer something a little different to the Daggerheart Foundry commmunity.
 
-# Project Duality
-Project Duality is intended to replicate the card-based gameplay experience of in-person Daggerheart, utilising the systems that Foundryborne have masterfully crafted for us, but presenting them in a new format. Players can see their cards in front of them, draw them and play them theatrically into the VTT for all their party members to see - just like if you were at a table together. 
-But Daggerheart is an asymmetric play experience, and that calls for an asymmetric interface. The GM Dashboard has constant visibility of all the player Characters, can give them the Spotlight and target them with attacks and effects, without the need to create a combat encounter. They will have narrative and mechanical effects at their finger tips, avoiding the need to go fishing through compendiums and scenes - it's right there in the scene.
+Project Duality is intended to replicate the card-based gameplay experience of in-person Daggerheart, utilising the systems that Foundryborne have masterfully crafted for us, but presenting them in a new format. 
+
+Players can see their cards in front of them, draw them and play them theatrically into the VTT for all their party members to see - just like if you were at a table together. 
+
+But Daggerheart is an asymmetric play experience, and that calls for an asymmetric interface. The GM Dashboard has constant visibility of all the player Characters, can give them the Spotlight and target them with attacks and effects, without the need to create a combat encounter. They will have narrative and mechanical effects at their finger tips, avoiding the need to go fishing through compendiums and scenes - it's right there in the dashboard.
+
 This is still a work in development and I would appreciate any feedback from the community - bugs, feature requests etc. and I hope I will be able to support this in my spare time. But for now, please enjoy.
+
 
 ## Installation
 - **Manifest URL**: https://raw.githubusercontent.com/DuncfordUK/duality-cardflow/main/dist/module.json Copy and paste this link into the Manifest URL field on the "Install Module" dialogue in Foundry.
@@ -33,23 +37,19 @@ A persistent overlay at the bottom of the screen replaces the standard player co
 <img width="862" height="485" alt="Spotlight" src="https://github.com/user-attachments/assets/22d11581-e7c7-4d7a-b040-eb6c2bfff62e" />
 
 - **Trait badges** — hover the portrait to reveal AGI / STR / FIN / INS / PRE / KNO attribute badges above; click any badge to roll that trait
-- **Weapon cards** — hover the portrait to reveal equipped weapons below; click to trigger an attack rol
-- **Request Spotlight button** — a sparkle-hand orb appears to the right of the portrait when another character holds the spotlight; click to raise or lower your hand
+- **Weapon cards** — hover the portrait to reveal equipped weapons below; click to trigger an attack roll
+- **Request Spotlight button** — an orb appears to the right of the portrait when another character holds the spotlight; click to raise or lower your hand for the Spotlight
 - **HP and Stress bars** — click to enter inline edit mode; scroll wheel to adjust by ±1
 - **Armor slots** — pip track driven by the equipped armor item
-- **Damage thresholds** — minor, major, and severe thresholds shown in the stat row
+- **Damage thresholds** — major and severe thresholds shown in the stat row
 - **Hope track** — interactive pip row above the portrait; click any pip to set the current hope value
 - **Class feature rings** — orb buttons for each class feature; click to use, hover for a detail panel showing the feature description and resource state
 
 <img width="646" height="517" alt="Class Feature" src="https://github.com/user-attachments/assets/b307a0c3-318a-48e9-bf7b-cbd232d81570" />
 
-- **Hope feature ring** — same use/hover behaviour for the hope ability
+- **Hope feature ring** — orb button for your Class Hope Feature; click to use, hover for a detail panel showing the feature description.
 
 <img width="580" height="464" alt="Hope Feature" src="https://github.com/user-attachments/assets/fc2afc68-44bc-4433-8185-f8014d44bf60" />
-
-- **Hope reveal** — a distinct gold-themed reveal for Hope Feature uses
-
-<img width="810" height="1080" alt="Hope Feature Reveal" src="https://github.com/user-attachments/assets/20dc01cf-6efd-4bc3-8c6a-f853006aa56d" />
 
 - **Inventory panel** — backpack orb opens a full inventory: weapons, armour, consumables, loot, and gold
 
@@ -64,10 +64,19 @@ A persistent overlay at the bottom of the screen replaces the standard player co
 <img width="860" height="573" alt="Card Hand Animation" src="https://github.com/user-attachments/assets/49086417-dced-4d2f-ae8b-2ca12de81fb7" />
 <img width="629" height="786" alt="Card Spotlight" src="https://github.com/user-attachments/assets/87eba56d-5c6c-49af-826b-599568a7736f" />
 
-- **Cinematic card reveal** — a fullscreen animated reveal plays when a domain card is drawn; card-type-aware layout adapts primary/secondary text per card type
+
+
+
+### Domain and Hope Feature Animation
+To add theatre and a sense of shared presence, the use of Domain Abilities and Hope Features triggers dramatic animations shared globally; when the tension is at its height, everyone gets to share in your moment.
+
+- **Cinematic card reveal** — a fullscreen animated reveal plays when a domain card is drawn.
 
 <img width="864" height="1080" alt="Card Reveal" src="https://github.com/user-attachments/assets/4bca811b-0de4-425c-af80-45992b59c86a" />
 
+- **Hope reveal** — a distinct gold-themed reveal for Hope Feature uses.
+
+<img width="810" height="1080" alt="Hope Feature Reveal" src="https://github.com/user-attachments/assets/20dc01cf-6efd-4bc3-8c6a-f853006aa56d" />
 
 ### GM Dashboard
 
