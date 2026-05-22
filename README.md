@@ -16,6 +16,10 @@ Project Duality is intended to replicate the card-based gameplay experience of i
 But Daggerheart is an asymmetric play experience, and that calls for an asymmetric interface. The GM Dashboard has constant visibility of all the player Characters, can give them the Spotlight and target them with attacks and effects, without the need to create a combat encounter. They will have narrative and mechanical effects at their finger tips, avoiding the need to go fishing through compendiums and scenes - it's right there in the scene.
 This is still a work in development and I would appreciate any feedback from the community - bugs, feature requests etc. and I hope I will be able to support this in my spare time. But for now, please enjoy.
 
+## Installation
+- **Manifest URL**: https://raw.githubusercontent.com/DuncfordUK/duality-cardflow/main/dist/module.json Copy and paste this link into the Manifest URL field on the "Install Module" dialogue in Foundry.
+- **.zip Download**: Download the most recent .zip file from the Releases section and extract it into your local Foundry Modules folder (see your Foundry Log In page for the file path on your machine).
+
 ## Features
 
 ### Player Area
